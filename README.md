@@ -7,6 +7,7 @@ Titik awal untuk Tantangan Robot Pengikut Garis, [EF234726] Robotika Kelas T. Is
 | `perangkat.py` | Port motor dan sensor, serta ukuran roda. Dipakai bersama oleh kedua program |
 | `main.py` | Pengikut garis. Ini program yang didemonstrasikan |
 | `kalibrasi.py` | Mengukur `BLACK` dan `WHITE` untuk `main.py` |
+| `kalibrasi_dinding.py` | Mengangkat sensor lalu menampilkan jarak dan warna dinding untuk menyetel `WALL_MM`, `READ_MM`, dan `ARM_UP_DEG` |
 | `.vscode/tasks.json` | Tombol pintas untuk mengirim program ke hub |
 | `requirements.txt` | `pybricksdev` dan `pybricks` |
 
