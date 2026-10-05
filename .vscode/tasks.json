@@ -5,7 +5,7 @@
       "label": "Pybricks: jalankan main.py",
       "type": "process",
       "command": "${command:python.interpreterPath}",
-      "args": ["-m", "pybricksdev", "run", "ble", "--name", "${config:pybricks.hubName}", "${workspaceFolder}/main.py"],
+      "args": ["${workspaceFolder}/kirim.py", "${workspaceFolder}/main.py", "--name", "${config:pybricks.hubName}"],
       "group": { "kind": "build", "isDefault": true },
       "problemMatcher": []
     },
@@ -13,7 +13,7 @@
       "label": "Pybricks: jalankan kalibrasi.py",
       "type": "process",
       "command": "${command:python.interpreterPath}",
-      "args": ["-m", "pybricksdev", "run", "ble", "--name", "${config:pybricks.hubName}", "${workspaceFolder}/kalibrasi.py"],
+      "args": ["${workspaceFolder}/kirim.py", "${workspaceFolder}/kalibrasi.py", "--name", "${config:pybricks.hubName}"],
       "group": "build",
       "problemMatcher": []
     },
@@ -21,7 +21,7 @@
       "label": "Pybricks: jalankan kalibrasi_dinding.py",
       "type": "process",
       "command": "${command:python.interpreterPath}",
-      "args": ["-m", "pybricksdev", "run", "ble", "--name", "${config:pybricks.hubName}", "${workspaceFolder}/kalibrasi_dinding.py"],
+      "args": ["${workspaceFolder}/kirim.py", "${workspaceFolder}/kalibrasi_dinding.py", "--name", "${config:pybricks.hubName}"],
       "group": "build",
       "problemMatcher": []
     },
@@ -29,7 +29,7 @@
       "label": "Pybricks: jalankan diagnosa.py",
       "type": "process",
       "command": "${command:python.interpreterPath}",
-      "args": ["-m", "pybricksdev", "run", "ble", "--name", "${config:pybricks.hubName}", "${workspaceFolder}/diagnosa.py"],
+      "args": ["${workspaceFolder}/kirim.py", "${workspaceFolder}/diagnosa.py", "--name", "${config:pybricks.hubName}"],
       "group": "build",
       "problemMatcher": []
     }

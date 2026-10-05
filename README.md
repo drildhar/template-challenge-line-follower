@@ -12,6 +12,7 @@ menghadap depan, warnanya dibaca, lalu robot belok sesuai aturan warna.
 |---|---|
 | `perangkat.py` | Port motor dan sensor, ukuran roda, motor lengan. Dipakai bersama semua program |
 | `main.py` | Program yang didemonstrasikan. Pengikut garis PD, pencarian garis hilang, dan manuver dinding |
+| `kirim.py` | Mengirim dan menjalankan program ke hub. Pengganti `pybricksdev run ble`, lihat alasannya di bawah |
 | `diagnosa.py` | Mengukur kecepatan loop dan mencatat kalau sensor jarak salah mendeteksi dinding |
 | `kalibrasi.py` | Mengukur `BLACK` dan `WHITE` untuk `main.py` |
 | `kalibrasi_dinding.py` | Mengangkat sensor lalu menampilkan jarak dan warna dinding |
@@ -66,10 +67,57 @@ Nyalakan hub sampai lampunya berkedip biru, lalu:
 Dari terminal:
 
 ```bash
-./.venv/bin/pybricksdev run ble --name "Marin Kitagawa" main.py
+./.venv/bin/python kirim.py main.py
+./.venv/bin/python kirim.py kalibrasi.py --name "Marin Kitagawa"
 ```
 
 Tanda kutipnya wajib karena nama hubnya mengandung spasi.
+
+## Kenapa kirim.py, bukan pybricksdev run ble langsung
+
+`pybricksdev` 2.3.2 rusak di BlueZ 5.87, yaitu versi yang dipakai CachyOS,
+Arch, dan distro lain yang sudah memutakhirkannya. Perintah ini:
+
+```bash
+./.venv/bin/pybricksdev run ble --name "Marin Kitagawa" main.py
+```
+
+gagal dengan
+
+```
+bleak.exc.BleakDBusError: [org.bluez.Error.Failed] No discovery started
+```
+
+sebelum satu baris pun sampai ke hub, dan hasilnya berbeda-beda setiap kali
+dijalankan. Penyebabnya, `pybricksdev` meneruskan
+`service_uuids=[PYBRICKS_SERVICE_UUID]` ke `BleakScanner`. Pada `StopDiscovery`
+bleak hanya memaafkan `org.bluez.Error.NotReady`, sedangkan BlueZ 5.87
+mengembalikan `org.bluez.Error.Failed` dengan pesan "No discovery started".
+
+Itu bug di alatnya, bukan di program robotnya. `kirim.py` memindai tanpa
+parameter tersebut, mencocokkan nama hub sendiri, lalu memakai
+`PybricksHubBLE` milik pybricksdev untuk mengirim dan menjalankan programnya.
+Progres pengiriman dan `print()` dari hub tetap muncul di terminal.
+
+Bedanya bisa kalian ukur sendiri, satu perintah dalam satu proses baru:
+
+```bash
+# gagal di BlueZ 5.87
+./.venv/bin/pybricksdev run ble --name "Marin Kitagawa" main.py
+
+# jalan
+./.venv/bin/python kirim.py main.py
+```
+
+### Kalau muncul "hub tidak ketemu"
+
+Hub hanya menerima satu sambungan Bluetooth pada satu waktu. Selama
+tersambung ke perangkat lain, hub berhenti mengiklankan dirinya, jadi tidak
+terlihat oleh pemindaian. Jadi kalau hub tidak ketemu padahal lampunya
+berkedip biru, kemungkinan besar hub sedang dipakai orang lain, atau tab
+`code.pybricks.com` masih terbuka dan masih memegang sambungannya. Ini juga
+sebabnya mencari hub kadang berhasil kadang tidak, tergantung siapa yang
+sedang memegangnya. `kirim.py` mencetak daftar periksaannya.
 
 Program yang terakhir dikirim tersimpan di slot hub yang sedang terpilih. Saat
 demonstrasi, robot dijalankan dengan tombol tengah hub, tanpa laptop. Tombol
